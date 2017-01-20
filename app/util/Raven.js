@@ -1,6 +1,8 @@
 import config from '../config';
 import { COMMIT_ID } from '../buildInfo';
 
+const RavenLimiter = {};
+
 function getRaven() {
   if (process.env.NODE_ENV === 'production') {
     /* eslint-disable global-require */
@@ -11,6 +13,19 @@ function getRaven() {
     Raven.config(config.SENTRY_DSN, {
       release: COMMIT_ID,
       stacktrace: true,
+      shouldSendCallback: (data) => {
+        if (data.message in RavenLimiter) {
+          return false;
+        }
+
+        RavenLimiter[data.message] = true;
+
+        setTimeout(() => {
+          delete RavenLimiter[data.message];
+        }, 60000);
+
+        return true;
+      },
     }).install();
     return Raven;
   }
