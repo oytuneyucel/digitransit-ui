@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
+import React from 'react';
 import { FormattedMessage } from 'react-intl';
 import moment from 'moment';
 
@@ -6,12 +7,7 @@ import TransitLeg from './TransitLeg';
 import ComponentUsageExample from './ComponentUsageExample';
 
 const SubwayLeg = ({ leg, focusAction, index }) => (
-  <TransitLeg
-    mode="SUBWAY"
-    leg={leg}
-    focusAction={focusAction}
-    index={index}
-  >
+  <TransitLeg mode="SUBWAY" leg={leg} focusAction={focusAction} index={index}>
     <FormattedMessage
       id="subway-with-route-number"
       values={{
@@ -33,15 +29,19 @@ const exampleLeg = t1 => ({
   distance: 586.4621425755712,
   duration: 120,
   rentedBike: false,
-  intermediateStops: [],
+  intermediatePlaces: [],
   route: { gtfsId: '123', shortName: 'M2', mode: 'SUBWAY' },
-  trip: { tripHeadsign: 'Tapiola', pattern: { code: '123' } },
+  trip: { gtfsId: '123', tripHeadsign: 'Tapiola', pattern: { code: '123' } },
   from: { name: 'Mellunmäki', stop: { code: 'M2' } },
+  to: { name: 'Tapiola', stop: { code: '1234 ' } },
 });
 
 SubwayLeg.description = () => {
-  const today = moment().hour(12).minute(34).second(0)
-                        .valueOf();
+  const today = moment()
+    .hour(12)
+    .minute(34)
+    .second(0)
+    .valueOf();
   return (
     <div>
       <p>Displays an itinerary subway leg.</p>
